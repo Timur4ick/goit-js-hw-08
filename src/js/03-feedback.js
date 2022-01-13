@@ -1,4 +1,4 @@
-const trotlle = require('lodash.throttle');
+const trottle = require('lodash.throttle');
 
 const refs = {
   form: document.querySelector('.feedback-form'),
@@ -8,25 +8,35 @@ const refs = {
 };
 
 refs.form.addEventListener('submit', onFormSubmit);
-refs.form.addEventListener('input', trotlle(onFormInput, 500));
+refs.form.addEventListener('input', trottle(onFormInput, 500));
+
+const formValue = {
+  email: refs.emailInput.value,
+  message: refs.textarea.value,
+};
+
+function formAutocomplete() {
+  const dataShow = JSON.parse(localStorage.getItem('feedback-form-state'));
+
+  if (dataShow) {
+    formValue.email = dataShow.email;
+    formValue.message = dataShow.message;
+  }
+}
+formAutocomplete();
 
 function onFormSubmit(evt) {
   evt.preventDefault();
 
-  const formData = new FormData(evt.currentTarget);
-
-  formData.forEach((value, name) => {
-    // console.log(name);
-    // console.log(value);
-  });
+  localStorage.removeItem('feedback-form-state');
+  // formValue.email = '';
+  // formValue.message = '';
+  refs.form.reset();
 }
 
 function onFormInput(event) {
-  const formElements = event.currentTarget.elements;
-  console.log(formElements);
-  const mail = formElements.email.value;
-
-  const message = formElements.message.value;
+  const mail = formValue.email;
+  const message = formValue.message;
 
   const dataSave = {
     mail,
@@ -34,5 +44,4 @@ function onFormInput(event) {
   };
 
   localStorage.setItem('feedback-form-state', JSON.stringify(dataSave));
-  const dataShow = JSON.parse(localStorage.getItem('feedback-form-state'));
 }
