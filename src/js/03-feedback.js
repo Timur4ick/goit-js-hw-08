@@ -1,4 +1,4 @@
-const trottle = require('lodash.throttle');
+const throttle = require('lodash.throttle');
 
 const refs = {
   form: document.querySelector('.feedback-form'),
@@ -8,38 +8,38 @@ const refs = {
 };
 
 refs.form.addEventListener('submit', onFormSubmit);
-refs.form.addEventListener('input', trottle(onFormInput, 500));
-
-const formValue = {
-  email: refs.emailInput.value,
-  message: refs.textarea.value,
-};
+refs.form.addEventListener('input', throttle(onFormInput, 500));
 
 function formAutocomplete() {
   const dataShow = JSON.parse(localStorage.getItem('feedback-form-state'));
-
   if (dataShow) {
-    formValue.email = dataShow.email;
-    formValue.message = dataShow.message;
+    refs.emailInput.value = dataShow.email;
+    refs.textarea.value = dataShow.message;
   }
 }
 formAutocomplete();
 
 function onFormSubmit(evt) {
   evt.preventDefault();
+  // localStorage.removeItem('feedback-form-state');
 
-  localStorage.removeItem('feedback-form-state');
-  // formValue.email = '';
-  // formValue.message = '';
-  refs.form.reset();
+  const formValue = {
+    email: refs.emailInput.value,
+    message: refs.textarea.value,
+  };
+  console.log(formValue);
+  refs.emailInput.value = '';
+  refs.textarea.value = '';
+  // refs.form.reset();
 }
 
 function onFormInput(event) {
-  const mail = formValue.email;
-  const message = formValue.message;
+  console.log(event.currentTarget);
+  const email = refs.emailInput.value;
+  const message = refs.textarea.value;
 
   const dataSave = {
-    mail,
+    email,
     message,
   };
 
