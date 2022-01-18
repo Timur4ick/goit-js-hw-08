@@ -27,7 +27,7 @@ function onFormSubmit(evt) {
     email: refs.emailInput.value,
     message: refs.textarea.value,
   };
-  console.log(formValue);
+  // console.log(formValue);
   refs.emailInput.value = '';
   refs.textarea.value = '';
   // refs.form.reset();
